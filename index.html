@@ -714,11 +714,25 @@
     <script>
         // 面板切换功能
         document.getElementById('leftToggle').addEventListener('click', function() {
-            document.getElementById('leftPanel').classList.toggle('visible');
+            const leftPanel = document.getElementById('leftPanel');
+            leftPanel.classList.toggle('visible');
+            
+            // 如果右侧面板打开，则关闭它
+            const rightPanel = document.getElementById('rightPanel');
+            if (rightPanel.classList.contains('visible')) {
+                rightPanel.classList.remove('visible');
+            }
         });
         
         document.getElementById('rightToggle').addEventListener('click', function() {
-            document.getElementById('rightPanel').classList.toggle('visible');
+            const rightPanel = document.getElementById('rightPanel');
+            rightPanel.classList.toggle('visible');
+            
+            // 如果左侧面板打开，则关闭它
+            const leftPanel = document.getElementById('leftPanel');
+            if (leftPanel.classList.contains('visible')) {
+                leftPanel.classList.remove('visible');
+            }
         });
         
         // 点击作家卡片时自动搜索
