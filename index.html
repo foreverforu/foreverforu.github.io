@@ -29,11 +29,13 @@
             line-height: 1.6;
             position: relative;
             min-height: 100vh;
+            margin: 0;
+            padding: 0;
         }
 
         .header {
             background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)), 
-                        url('https://example.com/nanjing-skyline.jpg') center/cover;
+                        url('https://images.unsplash.com/photo-1545912452-8aea7e25a3d3?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') center/cover;
             color: white;
             padding: 3rem 1rem;
             text-align: center;
@@ -93,6 +95,7 @@
             overflow: hidden;
             z-index: 1;
             transition: all 0.4s;
+            color: white;
         }
         
         .explore-btn:before {
@@ -263,7 +266,7 @@
             font-size: 1.8rem;
             font-weight: bold;
             margin: 0 0.5rem;
-            color: rgb(15, 26, 78);
+            color: white;
         }
         
         .search-container {
@@ -311,7 +314,7 @@
             background: var(--secondary-color);
         }
         
-        /* 新增：侧边滚动面板样式 */
+        /* 侧边滚动面板样式 */
         .side-panel {
             position: fixed;
             top: 0;
@@ -357,6 +360,7 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             z-index: 99;
             transition: all 0.3s ease;
+            font-weight: bold;
         }
         
         .panel-toggle:hover {
@@ -490,34 +494,40 @@
             line-height: 1.5;
         }
         
-        /* 新增：左下角年代分层筛选器 */
+        /* 优化：年代分层筛选器样式 */
         .era-filter {
             position: absolute;
             bottom: 20px;
             left: 20px;
             z-index: 100;
             background: rgba(255, 255, 255, 0.95);
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            padding: 10px;
-            backdrop-filter: blur(5px);
-            border: 1px solid rgba(0, 0, 0, 0.05);
-            max-width: 200px;
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            padding: 12px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            max-width: 220px;
+            transition: all 0.3s ease;
+        }
+        
+        .era-filter:hover {
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.2);
         }
         
         .era-filter-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 10px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid #e2e8f0;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.08);
         }
         
         .era-filter-title {
             font-weight: bold;
             color: var(--primary-color);
-            font-size: 14px;
+            font-size: 15px;
+            font-family: 'Noto Serif SC', serif;
         }
         
         .era-filter-toggle {
@@ -527,10 +537,13 @@
             color: var(--light-text);
             font-size: 16px;
             transition: all 0.3s;
+            padding: 4px;
+            border-radius: 4px;
         }
         
         .era-filter-toggle:hover {
             color: var(--primary-color);
+            background: rgba(42, 143, 230, 0.1);
         }
         
         .era-options {
@@ -542,15 +555,15 @@
         .era-option {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             cursor: pointer;
-            padding: 6px 8px;
-            border-radius: 4px;
+            padding: 8px 10px;
+            border-radius: 6px;
             transition: all 0.2s;
         }
         
         .era-option:hover {
-            background: rgba(42, 143, 230, 0.1);
+            background: rgba(42, 143, 230, 0.08);
         }
         
         .era-option.active {
@@ -560,19 +573,23 @@
         }
         
         .era-color {
-            width: 12px;
-            height: 12px;
+            width: 14px;
+            height: 14px;
             border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         
         .era-name {
-            font-size: 13px;
+            font-size: 14px;
+            flex: 1;
         }
         
         .era-count {
-            margin-left: auto;
             font-size: 12px;
             color: var(--light-text);
+            background: rgba(0, 0, 0, 0.05);
+            padding: 2px 6px;
+            border-radius: 10px;
         }
         
         @media (max-width: 1200px) {
@@ -787,7 +804,7 @@
         </div>
     </div>
     
-    <!-- AI助手容器保持不变 -->
+    <!-- AI助手容器 -->
     <div id="ai-assistant">
         <div id="chat-container">
             <div class="chat-header">
@@ -812,9 +829,6 @@
             文创产品
         </a>
     </div>
-    
-    <script src="./js/script.js"></script>
-    <script src="./js/ai_assistant.js"></script> 
     
     <script>
         // 南京文学地标数据（按年代分层）
@@ -1057,7 +1071,7 @@
                 fontWeight: 'bold'
             });
             
-            // 使用本地地图数据
+            // 使用南京地图数据
             fetch('https://geo.datav.aliyun.com/areas_v3/bound/320100_full.json')
                 .then(response => response.json())
                 .then(nanjingGeoJSON => {
