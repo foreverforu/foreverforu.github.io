@@ -661,3 +661,41 @@ body {
     color: #4a5568;
     line-height: 1.5;
 }
+/* ========== 年代筛选按钮样式 ========== */
+.era-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.era-btn {
+    padding: 8px 14px;
+    font-size: 0.9rem;
+    border: 1px solid #cbd5e1;
+    background: white;
+    color: #4a5568;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1 1 calc(50% - 10px); /* 每行最多两个 */
+}
+
+.era-btn:hover {
+    background: #e8f4ff;
+    border-color: #4a6cf7;
+}
+
+.era-btn.active {
+    background: #4a6cf7;
+    color: white;
+    border-color: #4a6cf7;
+    box-shadow: 0 2px 6px rgba(74, 108, 247, 0.3);
+}
+
+/* 小屏适配 */
+@media (max-width: 480px) {
+    .era-btn {
+        flex: 1 1 100%;
+    }
+}
