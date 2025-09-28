@@ -108,6 +108,38 @@
             margin-top: 5px;
         }
 
+        /* 地图容器 */
+        .map-container {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #mapContainer {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* 地图控制面板 */
+        .map-controls {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            width: 280px;
+        }
+
+        .control-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--primary-color);
+            font-size: 0.9rem;
+        }
+
         /* 年代筛选按钮 */
         .era-filters {
             display: flex;
@@ -134,38 +166,6 @@
             background: var(--primary-color);
             color: white;
             border-color: var(--primary-color);
-        }
-
-        /* 地图容器 */
-        .map-container {
-            flex: 1;
-            position: relative;
-            overflow: hidden;
-        }
-
-        #mapContainer {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* 地图控制面板 */
-        .map-controls {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 8px;
-            padding: 15px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            width: 200px;
-        }
-
-        .control-title {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--primary-color);
-            font-size: 0.9rem;
         }
 
         /* 立体小人样式 */
@@ -240,6 +240,40 @@
             color: #4a5568;
         }
 
+        /* 欢迎提示框 */
+        .welcome-box {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 8px;
+            padding: 15px 20px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            z-index: 10;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        .welcome-box h3 {
+            margin: 0 0 10px;
+            color: var(--primary-color);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .welcome-box p {
+            margin: 5px 0;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+
+        .current-count {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.2rem;
+        }
+
         /* 响应式设计 */
         @media (max-width: 768px) {
             .container {
@@ -253,6 +287,16 @@
             
             .map-container {
                 height: 60vh;
+            }
+            
+            .map-controls {
+                width: 90%;
+                left: 5%;
+            }
+            
+            .welcome-box {
+                width: 90%;
+                padding: 10px 15px;
             }
         }
     </style>
@@ -290,16 +334,6 @@
                 </div>
             </div>
             
-            <div class="section-title">年代筛选</div>
-            <div class="era-filters">
-                <button class="era-btn active" data-era="all">全部</button>
-                <button class="era-btn" data-era="1920">1920-1930</button>
-                <button class="era-btn" data-era="1930">1930-1940</button>
-                <button class="era-btn" data-era="1950">1950-1960</button>
-                <button class="era-btn" data-era="1970">1970-1980</button>
-                <button class="era-btn" data-era="1990">1990至今</button>
-            </div>
-            
             <div class="section-title">文学地标</div>
             <div id="landmarkList">
                 <!-- 动态生成的地标列表 -->
@@ -310,9 +344,19 @@
         <div class="map-container">
             <div id="mapContainer"></div>
             
+            <!-- 欢迎提示框 -->
+            <div class="welcome-box">
+                <h3>欢迎使用南京现当代文学地图数字导览与文创平台</h3>
+                <p>在搜索框中输入作家姓名，查看他们在南京的创作足迹</p>
+                <p>点击地图上的标记点，查看作品详情</p>
+                <p>使用两侧面板了解更多南京文学信息</p>
+                <p>使用左下角年代筛选器按时期查看文学地标</p>
+                <p>当前展示 <span class="current-count" id="currentCount">7</span> 个相关地标</p>
+            </div>
+            
             <!-- 地图控制面板 -->
             <div class="map-controls">
-                <div class="control-title">地图控制</div>
+                <div class="control-title">年代筛选</div>
                 <div class="era-filters">
                     <button class="era-btn active" data-era="all">全部</button>
                     <button class="era-btn" data-era="1920">1920-1930</button>
@@ -426,6 +470,18 @@
                         era: "1970"
                     }
                 ]
+            },
+            "紫金山": {
+                position: [118.840, 32.067],
+                era: "1930",
+                works: [
+                    {
+                        title: "紫金山下",
+                        author: "吴组缃",
+                        excerpt: "描写南京紫金山下的风土人情",
+                        era: "1930"
+                    }
+                ]
             }
         };
 
@@ -445,6 +501,7 @@
             const character = document.getElementById('character');
             const locationPopup = document.getElementById('locationPopup');
             const landmarkList = document.getElementById('landmarkList');
+            const currentCount = document.getElementById('currentCount');
             
             let currentEra = "all"; // 当前选中的年代
             
@@ -468,6 +525,7 @@
                 currentEra = era;
                 updateMapMarkers(era);
                 updateLandmarkList(era);
+                updateCurrentCount();
             });
 
             // 使用本地地图数据
@@ -571,6 +629,9 @@
                 myChart.setOption(option);
                 myChart.hideLoading();
                 
+                // 更新当前地标数量
+                updateCurrentCount();
+                
                 // 鼠标移动事件 - 控制小人行走
                 $('#mapContainer').mousemove(function(e) {
                     const rect = this.getBoundingClientRect();
@@ -659,6 +720,14 @@
                     });
                 
                 landmarkList.innerHTML = html;
+            }
+            
+            // 更新当前地标数量
+            function updateCurrentCount() {
+                const count = Object.keys(literaryLandmarks)
+                    .filter(name => currentEra === "all" || literaryLandmarks[name].era === currentEra)
+                    .length;
+                currentCount.textContent = count;
             }
             
             // 检查附近地标
