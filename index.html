@@ -4,10 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>文都云图：南京现当代文学地图数字导览与文创平台</title>
-    <link rel="stylesheet" href="./css/style.css">
-    <!-- 在index.html的<head>部分添加 -->
-<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>" type="image/svg+xml">
-    <link rel="stylesheet" href="./css/ai_assistant.css"> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
     <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700&family=Noto+Sans+SC:wght@300;500&display=swap" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/echarts/5.4.2/echarts.min.js"></script>
     <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
@@ -30,6 +27,8 @@
             line-height: 1.6;
             position: relative;
             min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
         }
 
         .header {
@@ -72,128 +71,6 @@
             }
         }
         
-        .explore-btn-container {
-            position: relative;
-            overflow: hidden;
-            margin: 3rem 0;
-            padding: 4rem 0;
-            display: flex;           
-            justify-content: center; 
-            align-items: center;     
-            text-align: center;     
-        }
-        
-        .explore-btn {
-            display: inline-block;
-            padding: 1rem 2.5rem;
-            border-radius: 50px;
-            font-weight: bold;
-            text-decoration: none;
-            box-shadow: 0 10px 20px rgba(42, 143, 230, 0.3);
-            position: relative;
-            overflow: hidden;
-            z-index: 1;
-            transition: all 0.4s;
-        }
-        
-        .explore-btn:before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
-            z-index: -1;
-            transition: all 0.4s;
-        }
-        
-        .explore-btn:hover:before {
-            transform: scale(1.05);
-            opacity: 0.8;
-        }
-        
-        .explore-btn:after {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 5px;
-            height: 5px;
-            background: rgba(255, 255, 255, 0.5);
-            opacity: 0;
-            border-radius: 100%;
-            transform: scale(1, 1) translate(-50%, -50%);
-            transform-origin: 50% 50%;
-        }
-        
-        .explore-btn:hover:after {
-            animation: ripple 1s ease-out;
-        }
-        
-        @keyframes ripple {
-            0% {
-                transform: scale(0, 0);
-                opacity: 0.5;
-            }
-            100% {
-                transform: scale(20, 20);
-                opacity: 0;
-            }
-        }
-        
-        .location-detail h3 {
-            color: var(--primary-color);
-            font-family: 'Noto Serif SC', serif;
-            margin-bottom: 0.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-        
-        .location-detail h3:after {
-            content: '';
-            position: absolute;
-            left: 0;
-            bottom: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--accent-color);
-        }
-        
-        .author-info {
-            background: rgba(255, 255, 255, 0.9);
-            padding: 1.5rem;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .author-info h3 {
-            color: var(--primary-color);
-            margin-bottom: 0.5rem;
-        }
-        
-        .author-info p {
-            color: var(--light-text);
-            margin-bottom: 1rem;
-        }
-        
-        .work-title {
-            font-weight: bold;
-            color: var(--dark-text);
-        }
-        
-        .work-author {
-            font-size: 0.9rem;
-            color: var(--light-text);
-            margin: 0.3rem 0;
-        }
-        
-        .work-excerpt {
-            font-size: 0.9rem;
-            line-height: 1.5;
-            color: #4a5568;
-        }
-        
         .container {
             display: flex;
             flex-direction: column;
@@ -226,28 +103,6 @@
             overflow-y: auto;
             background: white;
             border-right: 1px solid #e2e8f0;
-        }
-        
-        .location-detail, .author-info {
-            animation: fadeIn 0.5s ease;
-        }
-        
-        .literary-works ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        
-        .literary-works li {
-            padding: 0.8rem;
-            margin: 0.5rem 0;
-            background: rgba(74, 108, 247, 0.05);
-            border-left: 3px solid var(--primary-color);
-            transition: all 0.3s;
-        }
-        
-        .literary-works li:hover {
-            background: rgba(74, 108, 247, 0.1);
-            transform: translateX(5px);
         }
         
         .counter {
@@ -312,345 +167,164 @@
             background: var(--secondary-color);
         }
         
-        /* 新增：侧边滚动面板样式 */
-        .side-panel {
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            width: var(--side-panel-width);
-            background: var(--side-panel-bg);
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+        /* 新增：年代分层筛选器 */
+        .era-filter {
+            position: absolute;
+            top: 20px;
+            right: 20px;
             z-index: 100;
-            overflow-y: auto;
-            transition: transform 0.4s ease;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 10px;
             backdrop-filter: blur(5px);
-            border-radius: 0 12px 12px 0;
+            border: 1px solid rgba(0, 0, 0, 0.05);
         }
         
-        .left-panel {
-            left: 0;
-            transform: translateX(-100%);
+        .era-filter-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #e2e8f0;
         }
         
-        .right-panel {
-            right: 0;
-            transform: translateX(100%);
+        .era-filter-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 14px;
         }
         
-        .side-panel.visible {
-            transform: translateX(0);
+        .era-filter-toggle {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--light-text);
+            font-size: 16px;
+            transition: all 0.3s;
         }
         
-        .panel-toggle {
-            position: fixed;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--primary-color);
-            color: white;
+        .era-filter-toggle:hover {
+            color: var(--primary-color);
+        }
+        
+        .era-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .era-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+        
+        .era-option:hover {
+            background: rgba(42, 143, 230, 0.1);
+        }
+        
+        .era-option.active {
+            background: rgba(42, 143, 230, 0.15);
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+        
+        .era-color {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+        
+        .era-name {
+            font-size: 13px;
+        }
+        
+        .era-count {
+            margin-left: auto;
+            font-size: 12px;
+            color: var(--light-text);
+        }
+        
+        /* 新增：立体小人样式 */
+        .character {
+            position: absolute;
             width: 40px;
             height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            border-radius: 0 8px 8px 0;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            z-index: 99;
-            transition: all 0.3s ease;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 60"><path d="M20 5c-3.3 0-6 2.7-6 6s2.7 6 6 6 6-2.7 6-6-2.7-6-6-6zm-5 15v10h2V20h6v10h2V20c0-3.3-2.7-6-6-6s-6 2.7-6 6zm-3 15h16v5H12v-5z" fill="%231a5fad"/></svg>') no-repeat;
+            background-size: contain;
+            z-index: 1000;
+            pointer-events: none;
+            transition: transform 0.5s;
         }
-        
-        .panel-toggle:hover {
-            background: var(--secondary-color);
-            width: 45px;
+
+        /* 新增：小人行走动画 */
+        @keyframes walk {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+            100% { transform: translateY(0); }
         }
-        
-        .left-toggle {
-            left: 0;
+
+        .character.walking {
+            animation: walk 0.5s infinite;
         }
-        
-        .right-toggle {
-            right: 0;
-            border-radius: 8px 0 0 8px;
+
+        /* 新增：地点信息弹窗 */
+        .location-popup {
+            position: absolute;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            width: 250px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            pointer-events: none;
+            z-index: 1001;
         }
-        
-        .panel-header {
-            font-family: 'Noto Serif SC', serif;
-            font-size: 1.5rem;
+
+        .location-popup.visible {
+            opacity: 1;
+        }
+
+        .location-popup h4 {
             color: var(--primary-color);
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.5rem;
+            margin-bottom: 8px;
+            font-size: 16px;
             border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 5px;
         }
-        
-        .timeline-item {
-            margin-bottom: 1.5rem;
-            padding-bottom: 1.5rem;
+
+        .literary-work-item {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
             border-bottom: 1px dashed #e2e8f0;
         }
-        
-        .timeline-year {
+
+        .literary-work-title {
             font-weight: bold;
-            color: var(--secondary-color);
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
+            color: var(--dark-text);
         }
-        
-        .timeline-content {
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-        
-        .author-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-        
-        .author-card {
-            background: rgba(42, 143, 230, 0.08);
-            border-radius: 8px;
-            padding: 0.8rem;
-            text-align: center;
-            transition: all 0.3s;
-            cursor: pointer;
-        }
-        
-        .author-card:hover {
-            background: rgba(42, 143, 230, 0.15);
-            transform: translateY(-3px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        
-        .author-name {
-            font-weight: 500;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
-        }
-        
-        .quote {
-            font-style: italic;
-            padding: 1rem;
-            border-left: 3px solid var(--accent-color);
-            background: rgba(255, 107, 107, 0.05);
-            margin: 1.5rem 0;
-            border-radius: 0 6px 6px 0;
-        }
-        
-        .quote-author {
-            text-align: right;
-            font-size: 0.9rem;
+
+        .literary-work-author {
+            font-size: 0.85rem;
             color: var(--light-text);
-            margin-top: 0.5rem;
+            margin: 0.2rem 0;
         }
-        
-        .recommended-book {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.7);
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
-        }
-        
-        .book-cover {
-            flex: 0 0 60px;
-            height: 80px;
-            background: var(--secondary-color);
-            border-radius: 4px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+
+        .literary-work-excerpt {
             font-size: 0.8rem;
-            text-align: center;
-            padding: 0.5rem;
-            line-height: 1.3;
-        }
-        
-        .book-info {
-            flex: 1;
-        }
-        
-        .book-title {
-            font-weight: bold;
-            margin-bottom: 0.3rem;
-        }
-        
-        .book-author {
-            font-size: 0.85rem;
-            color: var(--light-text);
-            margin-bottom: 0.5rem;
-        }
-        
-        .book-desc {
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-        
-        @media (max-width: 1200px) {
-            .side-panel {
-                width: 240px;
-            }
-        }
-        
-        @media (max-width: 992px) {
-            .side-panel {
-                width: 220px;
-                padding: 1rem;
-            }
-            
-            .panel-header {
-                font-size: 1.3rem;
-            }
-        }
-        
-        @media (max-width: 768px) {
-            .side-panel {
-                width: 85%;
-                border-radius: 0;
-            }
-            
-            .left-panel {
-                transform: translateX(-100%);
-            }
-            
-            .right-panel {
-                transform: translateX(100%);
-            }
-            
-            .panel-toggle {
-                display: none;
-            }
+            line-height: 1.4;
+            color: #4a5568;
         }
     </style>
 </head>
 <body>
-    <!-- 左侧信息面板 -->
-    <div class="side-panel left-panel" id="leftPanel">
-        <div class="panel-header">南京文学时间轴</div>
-        
-        <div class="timeline-item">
-            <div class="timeline-year">1920-1930</div>
-            <div class="timeline-content">
-                <p>南京成为新文化运动的重要阵地，朱自清、俞平伯等作家在南京创作了大量作品。</p>
-                <p>1923年，朱自清在南京创作了著名散文《桨声灯影里的秦淮河》。</p>
-            </div>
-        </div>
-        
-        <div class="timeline-item">
-            <div class="timeline-year">1930-1940</div>
-            <div class="timeline-content">
-                <p>南京作为民国首都，文学创作繁荣，涌现出张恨水、巴金等作家。</p>
-                <p>1934年，张恨水开始在南京创作《金粉世家》。</p>
-            </div>
-        </div>
-        
-        <div class="timeline-item">
-            <div class="timeline-year">1950-1960</div>
-            <div class="timeline-content">
-                <p>新中国成立后，南京文学进入新的发展阶段，陆文夫、高晓声等作家活跃。</p>
-                <p>1957年，陆文夫发表短篇小说《小巷深处》，描写南京小市民生活。</p>
-            </div>
-        </div>
-        
-        <div class="timeline-item">
-            <div class="timeline-year">1980至今</div>
-            <div class="timeline-content">
-                <p>新时期南京文学繁荣，叶兆言、苏童、毕飞宇等作家崛起。</p>
-                <p>叶兆言创作了《南京人》《南京传》等南京题材作品。</p>
-            </div>
-        </div>
-        
-        <div class="panel-header" style="margin-top: 2rem;">南京作家群</div>
-        <div class="author-list">
-            <div class="author-card" data-author="朱自清">
-                <div class="author-name">朱自清</div>
-            </div>
-            <div class="author-card" data-author="俞平伯">
-                <div class="author-name">俞平伯</div>
-            </div>
-            <div class="author-card" data-author="张恨水">
-                <div class="author-name">张恨水</div>
-            </div>
-            <div class="author-card" data-author="巴金">
-                <div class="author-name">巴金</div>
-            </div>
-            <div class="author-card" data-author="叶兆言">
-                <div class="author-name">叶兆言</div>
-            </div>
-            <div class="author-card" data-author="苏童">
-                <div class="author-name">苏童</div>
-            </div>
-            <div class="author-card" data-author="毕飞宇">
-                <div class="author-name">毕飞宇</div>
-            </div>
-            <div class="author-card" data-author="陆文夫">
-                <div class="author-name">陆文夫</div>
-            </div>
-        </div>
-        
-        <div class="quote">
-            "逛南京像逛古董铺子，到处都有些时代侵蚀的遗痕。你可以摩挲，可以凭吊，可以悠然遐想..."
-            <div class="quote-author">—— 朱自清《南京》</div>
-        </div>
-    </div>
-    
-    <!-- 右侧信息面板 -->
-    <div class="side-panel right-panel" id="rightPanel">
-        <div class="panel-header">文学地标导览</div>
-        
-        <div class="recommended-book">
-            <div class="book-cover">秦淮河</div>
-            <div class="book-info">
-                <div class="book-title">桨声灯影里的秦淮河</div>
-                <div class="book-author">朱自清</div>
-                <div class="book-desc">朱自清与俞平伯同游秦淮河后各自创作的散文名篇，描写了秦淮河夜景和人文风情。</div>
-            </div>
-        </div>
-        
-        <div class="recommended-book">
-            <div class="book-cover">夫子庙</div>
-            <div class="book-info">
-                <div class="book-title">南京人</div>
-                <div class="book-author">叶兆言</div>
-                <div class="book-desc">叶兆言笔下南京人的生活百态，夫子庙的市井气息在书中得到生动展现。</div>
-            </div>
-        </div>
-        
-        <div class="recommended-book">
-            <div class="book-cover">中山陵</div>
-            <div class="book-info">
-                <div class="book-title">钟山风雨</div>
-                <div class="book-author">张恨水</div>
-                <div class="book-desc">以南京为背景的长篇小说，描绘了民国时期南京的社会变迁。</div>
-            </div>
-        </div>
-        
-        <div class="panel-header" style="margin-top: 1.5rem;">文学小贴士</div>
-        <div class="timeline-content">
-            <p><strong>南京文学地图使用指南：</strong></p>
-            <ul>
-                <li>点击地图上的标记点查看详情</li>
-                <li>搜索框可查找作家及作品</li>
-                <li>作家卡片可快速定位相关地点</li>
-                <li>使用时间轴了解文学发展脉络</li>
-            </ul>
-        </div>
-        
-        <div class="quote">
-            "南京的可爱，在文学中表现得最为充分。六朝古都的沧桑，秦淮河的风月，玄武湖的烟波，都在作家笔下得到了永生。"
-            <div class="quote-author">—— 叶兆言</div>
-        </div>
-    </div>
-    
-    <!-- 面板切换按钮 -->
-    <div class="panel-toggle left-toggle" id="leftToggle">文</div>
-    <div class="panel-toggle right-toggle" id="rightToggle">学</div>
-
     <div class="header">
         <h1>探索作家笔下的人文南京</h1>
         <p>文都云图：南京现当代文学地图数字导览与文创平台</p>
@@ -662,6 +336,19 @@
     </div>
     
     <div class="container">
+        <!-- 年代分层筛选器 -->
+        <div class="era-filter" id="eraFilter">
+            <div class="era-filter-header">
+                <div class="era-filter-title">年代分层查看</div>
+                <button class="era-filter-toggle" id="eraFilterToggle">
+                    <i class="bi bi-chevron-down"></i>
+                </button>
+            </div>
+            <div class="era-options" id="eraOptions">
+                <!-- 年代选项将通过JavaScript动态生成 -->
+            </div>
+        </div>
+        
         <div id="mapContainer"></div>
         
         <div class="sidebar">
@@ -670,7 +357,7 @@
                     <h3>欢迎使用南京现当代文学地图数字导览与文创平台</h3>
                     <p>在搜索框中输入作家姓名，查看他们在南京的创作足迹</p>
                     <p>点击地图上的标记点，查看作品详情</p>
-                    <p>使用两侧面板了解更多南京文学信息</p>
+                    <p>使用右上角年代筛选器按时期查看文学地标</p>
                 </div>
             </div>
             
@@ -682,143 +369,258 @@
         </div>
     </div>
     
-    <!-- AI助手容器保持不变 -->
-    <div id="ai-assistant">
-        <div id="chat-container">
-            <div class="chat-header">
-                <h3>南京文学助手</h3>
-                <button id="close-chat">×</button>
-            </div>
-            <!-- 虚拟形象区域 -->
-            <div id="avatar-container">
-                <div id="avatar-animation"></div>
-            </div>
-            <div id="chat-messages"></div>
-            <div class="chat-input">
-                <input type="text" id="user-input" placeholder="输入关于南京现当代文学的问题...">
-                <button id="send-btn">发送</button>
-            </div>
-        </div>
-        <button id="chat-toggle">💬💬</button>
+    <!-- 立体小人 -->
+    <div class="character" id="character"></div>
+    
+    <!-- 地点信息弹窗 -->
+    <div class="location-popup" id="locationPopup">
+        <h4 id="popupLocationName">地点名称</h4>
+        <div id="popupWorksList"></div>
     </div>
 
-    <div class="explore-btn-container">
-        <a href="./html/product.html" class="explore-btn">
-            文创产品
-        </a>
-    </div>
-    
-    <script src="./js/script.js"></script>
-    <script src="./js/ai_assistant.js"></script> 
-    
     <script>
-        // 面板切换功能
-        document.getElementById('leftToggle').addEventListener('click', function() {
-            const leftPanel = document.getElementById('leftPanel');
-            leftPanel.classList.toggle('visible');
-            
-            // 如果右侧面板打开，则关闭它
-            const rightPanel = document.getElementById('rightPanel');
-            if (rightPanel.classList.contains('visible')) {
-                rightPanel.classList.remove('visible');
+        // 南京文学地标数据（按年代分层）
+        const literaryLandmarks = {
+            "1920-1930": {
+                color: "#ff6b6b",
+                landmarks: {
+                    "秦淮河": {
+                        position: [118.792, 32.0107],
+                        works: [
+                            {
+                                title: "桨声灯影里的秦淮河",
+                                author: "朱自清",
+                                excerpt: "朱自清与俞平伯同游秦淮河后各自创作的散文名篇"
+                            },
+                            {
+                                title: "桨声灯影里的秦淮河",
+                                author: "俞平伯",
+                                excerpt: "与朱自清同题创作的经典散文"
+                            }
+                        ]
+                    },
+                    "东南大学": {
+                        position: [118.783, 32.058],
+                        works: [
+                            {
+                                title: "背影",
+                                author: "朱自清",
+                                excerpt: "朱自清在南京任教期间创作的经典散文"
+                            }
+                        ]
+                    }
+                }
+            },
+            "1930-1940": {
+                color: "#4ecdc4",
+                landmarks: {
+                    "夫子庙": {
+                        position: [118.790, 32.023],
+                        works: [
+                            {
+                                title: "丹风街",
+                                author: "张恨水",
+                                excerpt: "描写南京老城区市井生活"
+                            }
+                        ]
+                    },
+                    "中山陵": {
+                        position: [118.858, 32.062],
+                        works: [
+                            {
+                                title: "钟山风雨",
+                                author: "张恨水",
+                                excerpt: "以南京为背景的长篇小说，描绘了民国时期南京的社会变迁"
+                            }
+                        ]
+                    }
+                }
+            },
+            "1950-1960": {
+                color: "#45b7d1",
+                landmarks: {
+                    "玄武湖": {
+                        position: [118.796, 32.073],
+                        works: [
+                            {
+                                title: "小巷深处",
+                                author: "陆文夫",
+                                excerpt: "描写南京小市民生活的短篇小说"
+                            }
+                        ]
+                    }
+                }
+            },
+            "1980至今": {
+                color: "#96ceb4",
+                landmarks: {
+                    "南京大学": {
+                        position: [118.777, 32.057],
+                        works: [
+                            {
+                                title: "南京人",
+                                author: "叶兆言",
+                                excerpt: "叶兆言笔下南京人的生活百态"
+                            }
+                        ]
+                    },
+                    "颐和路": {
+                        position: [118.768, 32.055],
+                        works: [
+                            {
+                                title: "颐和路",
+                                author: "苏童",
+                                excerpt: "描写南京颐和路一带的历史与人文"
+                            }
+                        ]
+                    }
+                }
             }
-        });
-        
-        document.getElementById('rightToggle').addEventListener('click', function() {
-            const rightPanel = document.getElementById('rightPanel');
-            rightPanel.classList.toggle('visible');
-            
-            // 如果左侧面板打开，则关闭它
-            const leftPanel = document.getElementById('leftPanel');
-            if (leftPanel.classList.contains('visible')) {
-                leftPanel.classList.remove('visible');
-            }
-        });
-        
-        // 点击作家卡片时自动搜索
-        document.querySelectorAll('.author-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const author = this.getAttribute('data-author');
-                document.getElementById('searchInput').value = author;
-                document.getElementById('searchBtn').click();
-                
-                // 确保左侧面板打开
-                document.getElementById('leftPanel').classList.add('visible');
-            });
-        });
-    
-        // 地图初始化代码
+        };
+
+        // 初始化地图
         $(document).ready(function() {
             const myChart = echarts.init(document.getElementById('mapContainer'));
-        
-        // 使用全局函数获取标记点数据
-        const allMarkers = window.getNanjingMarkers();
+            const character = document.getElementById('character');
+            const locationPopup = document.getElementById('locationPopup');
+            const eraOptions = document.getElementById('eraOptions');
+            
+            // 当前选中的年代
+            let currentEra = "全部";
+            
+            // 生成年代选项
+            function generateEraOptions() {
+                let html = `
+                    <div class="era-option ${currentEra === '全部' ? 'active' : ''}" data-era="全部">
+                        <div class="era-color" style="background: #718096;"></div>
+                        <div class="era-name">全部</div>
+                        <div class="era-count" id="count-all">0</div>
+                    </div>
+                `;
+                
+                Object.keys(literaryLandmarks).forEach(era => {
+                    const color = literaryLandmarks[era].color;
+                    const count = Object.keys(literaryLandmarks[era].landmarks).length;
+                    
+                    html += `
+                        <div class="era-option ${currentEra === era ? 'active' : ''}" data-era="${era}">
+                            <div class="era-color" style="background: ${color};"></div>
+                            <div class="era-name">${era}</div>
+                            <div class="era-count" id="count-${era}">${count}</div>
+                        </div>
+                    `;
+                });
+                
+                eraOptions.innerHTML = html;
+                
+                // 添加点击事件
+                document.querySelectorAll('.era-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const era = this.getAttribute('data-era');
+                        selectEra(era);
+                    });
+                });
+            }
+            
+            // 选择年代
+            function selectEra(era) {
+                currentEra = era;
+                
+                // 更新UI
+                document.querySelectorAll('.era-option').forEach(option => {
+                    if (option.getAttribute('data-era') === era) {
+                        option.classList.add('active');
+                    } else {
+                        option.classList.remove('active');
+                    }
+                });
+                
+                // 更新地图
+                updateMap();
+            }
+            
+            // 更新地图显示
+            function updateMap() {
+                const markers = [];
+                
+                if (currentEra === "全部") {
+                    // 显示所有年代的地标
+                    Object.keys(literaryLandmarks).forEach(era => {
+                        const eraData = literaryLandmarks[era];
+                        Object.keys(eraData.landmarks).forEach(name => {
+                            const landmark = eraData.landmarks[name];
+                            markers.push({
+                                name: name,
+                                value: landmark.position,
+                                works: landmark.works,
+                                era: era,
+                                symbol: 'pin',
+                                symbolSize: [40, 50],
+                                itemStyle: { color: eraData.color }
+                            });
+                        });
+                    });
+                } else {
+                    // 显示特定年代的地标
+                    const eraData = literaryLandmarks[currentEra];
+                    Object.keys(eraData.landmarks).forEach(name => {
+                        const landmark = eraData.landmarks[name];
+                        markers.push({
+                            name: name,
+                            value: landmark.position,
+                            works: landmark.works,
+                            era: currentEra,
+                            symbol: 'pin',
+                            symbolSize: [40, 50],
+                            itemStyle: { color: eraData.color }
+                        });
+                    });
+                }
+                
+                // 更新计数器
+                $('.counter-number').text(markers.length);
+                
+                // 更新地图
+                myChart.setOption({
+                    series: [{
+                        data: markers
+                    }]
+                });
+            }
+            
             // 显示加载动画
             myChart.showLoading({
-        text: '正在加载文学地图...',
-        color: '#4a6cf7',
-        textColor: '#4a5568',
-        maskColor: 'rgba(255, 255, 255, 0.95)',
-        spinnerRadius: 15,
-        lineWidth: 4,
-        fontSize: 16,
-        fontWeight: 'bold'
-    });
-    function showCustomLoading() {
-        $('#mapContainer').append(`
-            <div class="custom-loading">
-                <div class="loading-spinner">
-                    <div class="double-bounce1"></div>
-                    <div class="double-bounce2"></div>
-                </div>
-                <div class="loading-text">探索南京文学世界...</div>
-            </div>
-        `);
-    }
-    
-    function hideCustomLoading() {
-        $('.custom-loading').fadeOut(300, function() {
-            $(this).remove();
-        });
-    }
+                text: '正在加载文学地图...',
+                color: '#4a6cf7',
+                textColor: '#4a5568',
+                maskColor: 'rgba(255, 255, 255, 0.95)'
+            });
+
             // 使用本地地图数据
-            fetch('./data/nanjing.json')
+            fetch('https://geo.datav.aliyun.com/areas_v3/bound/320100_full.json')
                 .then(response => response.json())
                 .then(nanjingGeoJSON => {
                     echarts.registerMap('nanjing', nanjingGeoJSON);
                     
-                    const allMarkers = window.getNanjingMarkers();
+                    // 生成年代选项
+                    generateEraOptions();
+                    
+                    // 初始显示全部地标
+                    updateMap();
                     
                     const option = {
                         title: {
                             text: '南京文学地图',
                             subtext: '作家笔下的人文南京',
-                            left: 'center',
-                            textStyle: { 
-                                color: '#2d3748', 
-                                fontSize: 24,
-                                fontWeight: 'bold'
-                            },
-                            subtextStyle: { 
-                                color: '#718096',
-                                fontSize: 16
-                            }
+                            left: 'center'
                         },
                         tooltip: {
                             trigger: 'item',
-                            backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                            borderColor: '#e2e8f0',
-                            borderWidth: 1,
-                            padding: 15,
-                            borderRadius: 8,
-                            textStyle: {
-                                color: '#2d3748'
-                            },
-                            formatter: function(params) {
+                            formatter: params => {
                                 if (params.componentType === 'series') {
-                                    return `<div style="font-weight:bold;margin-bottom:5px;">${params.name}</div>
-                                            <div>${params.data.excerpt || '南京文学地标'}</div>
-                                            <div style="margin-top:8px;color:#4a5568;">点击查看详情</div>`;
+                                    return `<div style="font-weight:bold">${params.name}</div>
+                                            <div>${params.data.works.length}部相关作品</div>
+                                            <div style="color:${params.data.itemStyle.color}">${params.data.era}</div>`;
                                 }
                                 return params.name;
                             }
@@ -828,186 +630,164 @@
                             roam: true,
                             zoom: 8,
                             center: [118.8, 32.05],
-                            label: { 
-                                emphasis: { 
-                                    show: false 
-                                } 
-                            },
                             itemStyle: {
                                 areaColor: '#e8f4ff',
                                 borderColor: '#297acc'
-                            },
-                            emphasis: {
-                                itemStyle: { 
-                                    areaColor: '#a4d0ff' 
-                                },
-                                label: { 
-                                    show: true, 
-                                    color: '#1a3d66' 
-                                }
                             }
                         },
                         series: [{
                             name: '文学地标',
                             type: 'scatter',
                             coordinateSystem: 'geo',
+                            data: [],
                             symbol: 'pin',
                             symbolSize: [40, 50],
-                            itemStyle: { 
-                                color: '#ff6b6b' 
-                            },
-                            data: allMarkers,
-                            label: {
-                                show: true,
-                                formatter: '{b}',
-                                position: 'bottom',
-                                color: '#1a3d66',
-                                fontSize: 12
-                            },
-                            zlevel: 2
+                            itemStyle: { color: '#ff6b6b' },
+                            label: { show: true, formatter: '{b}' }
                         }]
                     };
                     
                     // 应用配置
                     myChart.setOption(option);
-                    
-                    // 隐藏加载动画
                     myChart.hideLoading();
-                    
-                    // 更新计数器
-                    $('.counter-number').text(allMarkers.length);
                     
                     // 地图点击事件
                     myChart.on('click', function(params) {
-    if (params.componentType === 'series') {
-        const location = params.data;
-        
-        let worksHtml = '';
-        if (location.works && location.works.length > 0) {
-            worksHtml = '<div class="literary-works"><h4>相关作品:</h4><ul>';
-            
-            location.works.forEach(work => {
-                const title = work.title || "未知作品";
-                const author = work.author || "未知作者";
-                const excerpt = work.excerpt || "暂无描述";
-                const nanjingDesc = work.nanjingDescription || "暂无南京相关描写";
-                const locationName = work.location || "未知地点";
-                
-                worksHtml += `
-                    <li class="work-item">
-                        <div class="work-header">
-                            <span class="work-title">《${title}》</span>
-                            <span class="work-location">- ${locationName}</span>
-                        </div>
-                        <div class="work-author">作者：${author}</div>
-                        <div class="work-excerpt">${excerpt}</div>
-                        <div class="nanjing-description">
-                            <div class="desc-title">南京描写：</div>
-                            <div class="desc-content">${nanjingDesc}</div>
-                        </div>
-                    </li>
-                `;
-            });
-            
-            worksHtml += '</ul></div>';
-        } else {
-            worksHtml = '<p class="no-works">暂无相关作品信息</p>';
-        }
-        
-        $('#infoPanel').html(`
-            <div class="location-info">
-                <h3>${location.name || "未知地点"}</h3>
-                <p class="location-description">${location.excerpt || "江苏省会，六朝古都，中国现代文学重要城市"}</p>
-                ${worksHtml}
-            </div>
-        `);
-    }
-});
-});
-            // 响应窗口大小变化
-            window.addEventListener('resize', function() {
-                myChart.resize();
-            });
-            
-            // 搜索按钮点击事件
-            $('#searchBtn').click(function() {
-                const query = $('#searchInput').val().trim().toLowerCase();
-                const exactMatch = Object.keys(authorsData).find(author => 
-        author.toLowerCase() === query
-    );
-                // 先取消之前所有高亮
-                myChart.dispatchAction({ type: 'downplay' });
-                
-                // 过滤出包含该作者的地标点
-                const filteredMarkers = allMarkers.filter(marker => 
-                    marker.authors && marker.authors.some(author => author.includes(query))
-                );
-                
-                if (filteredMarkers.length > 0) {
-                    // 更新地图数据 - 只显示该作家相关的标记点
-                    myChart.setOption({
-                        series: [{
-                            data: filteredMarkers
-                        }]
+                        if (params.componentType === 'series') {
+                            const location = params.data;
+                            
+                            let worksHtml = '';
+                            if (location.works && location.works.length > 0) {
+                                worksHtml = '<div class="literary-works"><h4>相关作品:</h4>';
+                                
+                                location.works.forEach(work => {
+                                    worksHtml += `
+                                        <div class="literary-work-item">
+                                            <div class="literary-work-title">《${work.title}》</div>
+                                            <div class="literary-work-author">作者：${work.author}</div>
+                                            <div class="literary-work-excerpt">${work.excerpt}</div>
+                                        </div>
+                                    `;
+                                });
+                                
+                                worksHtml += '</div>';
+                            } else {
+                                worksHtml = '<p class="no-works">暂无相关作品信息</p>';
+                            }
+                            
+                            $('#infoPanel').html(`
+                                <div class="location-info">
+                                    <h3>${location.name || "未知地点"}</h3>
+                                    <p class="location-era" style="color:${location.itemStyle.color}">${location.era}</p>
+                                    ${worksHtml}
+                                </div>
+                            `);
+                        }
                     });
                     
-                    // 更新计数器
-                    $('.counter-number').text(filteredMarkers.length);
+                    // 鼠标移动事件 - 控制小人行走
+                    $('#mapContainer').mousemove(function(e) {
+                        const rect = this.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        // 限制角色不超出地图范围
+                        const posX = Math.max(20, Math.min(rect.width - 20, x));
+                        const posY = Math.max(30, Math.min(rect.height - 30, y));
+                        
+                        character.style.left = posX + 'px';
+                        character.style.top = posY + 'px';
+                        
+                        // 添加行走动画
+                        character.classList.add('walking');
+                        
+                        // 清除之前的定时器
+                        clearTimeout(character.walkingTimeout);
+                        
+                        // 设置定时器在鼠标停止移动后移除行走动画
+                        character.walkingTimeout = setTimeout(() => {
+                            character.classList.remove('walking');
+                        }, 500);
+                        
+                        // 检查是否接近地标
+                        checkNearbyLandmarks(posX, posY, rect.width, rect.height);
+                    });
                     
-                    // 高亮相关区域
-                    filteredMarkers.forEach(marker => {
-                        myChart.dispatchAction({
-                            type: 'highlight',
-                            seriesIndex: 0,
-                            name: marker.name
+                    // 检查附近地标
+                    function checkNearbyLandmarks(x, y, width, height) {
+                        const threshold = 50; // 像素距离阈值
+                        let nearestLandmark = null;
+                        let minDistance = Infinity;
+                        
+                        // 获取当前显示的地标数据
+                        const currentData = myChart.getOption().series[0].data;
+                        
+                        // 遍历所有地标
+                        currentData.forEach(landmarkData => {
+                            const pixelCoord = myChart.convertToPixel('geo', landmarkData.value);
+                            
+                            // 计算距离
+                            const distance = Math.sqrt(
+                                Math.pow(x - pixelCoord[0], 2) + 
+                                Math.pow(y - pixelCoord[1], 2)
+                            );
+                            
+                            if (distance < threshold && distance < minDistance) {
+                                minDistance = distance;
+                                nearestLandmark = {
+                                    name: landmarkData.name,
+                                    works: landmarkData.works
+                                };
+                            }
                         });
+                        
+                        // 显示或隐藏弹窗
+                        if (nearestLandmark) {
+                            showLandmarkPopup(nearestLandmark, x, y);
+                        } else {
+                            hideLandmarkPopup();
+                        }
+                    }
+                    
+                    // 显示地标信息弹窗
+                    function showLandmarkPopup(landmark, x, y) {
+                        const popup = $('#locationPopup');
+                        const popupName = $('#popupLocationName');
+                        const popupWorks = $('#popupWorksList');
+                        
+                        popupName.text(landmark.name);
+                        
+                        // 构建作品列表
+                        let worksHtml = '';
+                        landmark.works.forEach(work => {
+                            worksHtml += `
+                                <div class="literary-work-item">
+                                    <div class="literary-work-title">《${work.title}》</div>
+                                    <div class="literary-work-author">作者：${work.author}</div>
+                                    <div class="literary-work-excerpt">${work.excerpt}</div>
+                                </div>
+                            `;
+                        });
+                        
+                        popupWorks.html(worksHtml);
+                        
+                        // 定位弹窗位置
+                        popup.css({
+                            left: x + 30 + 'px',
+                            top: y - 50 + 'px'
+                        }).addClass('visible');
+                    }
+                    
+                    // 隐藏地标信息弹窗
+                    function hideLandmarkPopup() {
+                        $('#locationPopup').removeClass('visible');
+                    }
+                    
+                    // 响应窗口大小变化
+                    window.addEventListener('resize', function() {
+                        myChart.resize();
                     });
-                    
-                    // 查找作家信息
-                    const matchedAuthor = Object.keys(authorsData).find(author => 
-            author.includes(query) || query.includes(author)
-                    );
-                    
-                     if (matchedAuthor) {
-            const authorInfo = authorsData[matchedAuthor];
-            // 构建作品列表（完整代码）
-            let worksHtml = '';
-            if (authorInfo.works && authorInfo.works.length > 0) {
-                worksHtml = '<div class="literary-works"><h4>代表作品:</h4><ul>';
-                authorInfo.works.forEach(work => {
-                    // 确保显示作品描述
-                    worksHtml += `<li>
-                        <div class="work-title">《${work.title}》</div>
-                        <div class="work-location">地点: ${work.location}</div>
-                        <div class="work-excerpt">${work.excerpt}</div>
-                        <div class="nanjing-description">${work.nanjingDescription || '暂无南京相关描写'}</div>
-                    </li>`;
                 });
-                worksHtml += '</ul></div>';
-            }
-            
-            $('#infoPanel').html(`
-                <div class="author-info">
-                    <h3>${authorInfo.name}</h3>
-                    <p>${authorInfo.intro}</p>
-                    ${worksHtml}
-                </div>
-            `);
-        }
-    } else {
-                    $('#infoPanel').html(`<div class="author-info">
-                        <h3>未找到相关结果</h3>
-                        <p>请尝试搜索作家姓名(如:叶兆言、朱自清)或地点名称(如:秦淮河、夫子庙)</p>
-                    </div>`);
-                    
-                    myChart.setOption({
-                        series: [{
-                            data: allMarkers
-                        }]
-                    });
-                    $('.counter-number').text(allMarkers.length);
-                }
-            });
         });
     </script>
 </body>
