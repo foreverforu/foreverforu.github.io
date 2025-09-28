@@ -76,6 +76,29 @@
             border-bottom: 2px solid var(--accent-color);
         }
 
+        /* 搜索框样式 */
+        .search-box {
+            margin: 15px 0;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            box-sizing: border-box;
+        }
+
+        .search-box i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--light-text);
+        }
+
         /* 时间轴样式 */
         .timeline {
             margin: 20px 0;
@@ -120,52 +143,38 @@
             height: 100%;
         }
 
-        /* 地图控制面板 */
-        .map-controls {
+        /* 欢迎提示框 */
+        .welcome-box {
             position: absolute;
-            bottom: 20px;
-            left: 20px;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
             background: white;
             border-radius: 8px;
-            padding: 15px;
+            padding: 15px 20px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             z-index: 10;
-            width: 280px;
+            width: 80%;
+            max-width: 600px;
+            text-align: center;
         }
 
-        .control-title {
-            font-weight: bold;
-            margin-bottom: 10px;
+        .welcome-box h3 {
+            margin: 0 0 10px;
             color: var(--primary-color);
+            font-family: 'Noto Serif SC', serif;
+        }
+
+        .welcome-box p {
+            margin: 5px 0;
             font-size: 0.9rem;
+            color: var(--light-text);
         }
 
-        /* 年代筛选按钮 */
-        .era-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-            margin: 15px 0;
-        }
-
-        .era-btn {
-            padding: 6px 12px;
-            background: #f1f5f9;
-            border: 1px solid #cbd5e1;
-            border-radius: 4px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .era-btn:hover {
-            background: #e2e8f0;
-        }
-
-        .era-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+        .current-count {
+            font-weight: bold;
+            color: var(--accent-color);
+            font-size: 1.2rem;
         }
 
         /* 立体小人样式 */
@@ -240,40 +249,6 @@
             color: #4a5568;
         }
 
-        /* 欢迎提示框 */
-        .welcome-box {
-            position: absolute;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            border-radius: 8px;
-            padding: 15px 20px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            z-index: 10;
-            width: 80%;
-            max-width: 600px;
-            text-align: center;
-        }
-
-        .welcome-box h3 {
-            margin: 0 0 10px;
-            color: var(--primary-color);
-            font-family: 'Noto Serif SC', serif;
-        }
-
-        .welcome-box p {
-            margin: 5px 0;
-            font-size: 0.9rem;
-            color: var(--light-text);
-        }
-
-        .current-count {
-            font-weight: bold;
-            color: var(--accent-color);
-            font-size: 1.2rem;
-        }
-
         /* 响应式设计 */
         @media (max-width: 768px) {
             .container {
@@ -287,11 +262,6 @@
             
             .map-container {
                 height: 60vh;
-            }
-            
-            .map-controls {
-                width: 90%;
-                left: 5%;
             }
             
             .welcome-box {
@@ -308,6 +278,11 @@
             <div class="logo">
                 <h1>文都云图</h1>
                 <p>南京现当代文学地图数字导览与文创平台</p>
+            </div>
+            
+            <div class="search-box">
+                <input type="text" placeholder="输入作家姓名..." id="authorSearch">
+                <i class="bi bi-search"></i>
             </div>
             
             <div class="section-title">南京文学时间轴</div>
@@ -350,21 +325,7 @@
                 <p>在搜索框中输入作家姓名，查看他们在南京的创作足迹</p>
                 <p>点击地图上的标记点，查看作品详情</p>
                 <p>使用两侧面板了解更多南京文学信息</p>
-                <p>使用左下角年代筛选器按时期查看文学地标</p>
                 <p>当前展示 <span class="current-count" id="currentCount">7</span> 个相关地标</p>
-            </div>
-            
-            <!-- 地图控制面板 -->
-            <div class="map-controls">
-                <div class="control-title">年代筛选</div>
-                <div class="era-filters">
-                    <button class="era-btn active" data-era="all">全部</button>
-                    <button class="era-btn" data-era="1920">1920-1930</button>
-                    <button class="era-btn" data-era="1930">1930-1940</button>
-                    <button class="era-btn" data-era="1950">1950-1960</button>
-                    <button class="era-btn" data-era="1970">1970-1980</button>
-                    <button class="era-btn" data-era="1990">1990至今</button>
-                </div>
             </div>
             
             <!-- 立体小人 -->
@@ -379,11 +340,10 @@
     </div>
 
     <script>
-        // 南京文学地标数据 - 按年代分类
+        // 南京文学地标数据
         const literaryLandmarks = {
             "秦淮河": {
                 position: [118.792, 32.0107],
-                era: "1920",
                 works: [
                     {
                         title: "桨声灯影里的秦淮河",
@@ -407,7 +367,6 @@
             },
             "夫子庙": {
                 position: [118.790, 32.023],
-                era: "1930",
                 works: [
                     {
                         title: "南京人",
@@ -425,7 +384,6 @@
             },
             "中山陵": {
                 position: [118.853, 32.058],
-                era: "1950",
                 works: [
                     {
                         title: "钟山风雨",
@@ -437,7 +395,6 @@
             },
             "南京大学": {
                 position: [118.777, 32.057],
-                era: "1920",
                 works: [
                     {
                         title: "青春之歌",
@@ -449,7 +406,6 @@
             },
             "新街口": {
                 position: [118.783, 32.041],
-                era: "1990",
                 works: [
                     {
                         title: "城北地带",
@@ -461,7 +417,6 @@
             },
             "玄武湖": {
                 position: [118.796, 32.070],
-                era: "1970",
                 works: [
                     {
                         title: "玄武湖畔",
@@ -473,7 +428,6 @@
             },
             "紫金山": {
                 position: [118.840, 32.067],
-                era: "1930",
                 works: [
                     {
                         title: "紫金山下",
@@ -485,16 +439,6 @@
             }
         };
 
-        // 年代分类数据
-        const eraData = {
-            "all": { name: "全部", color: "#ff6b6b" },
-            "1920": { name: "1920-1930年代", color: "#4a6cf7" },
-            "1930": { name: "1930-1940年代", color: "#6c5ce7" },
-            "1950": { name: "1950-1960年代", color: "#00b894" },
-            "1970": { name: "1970-1980年代", color: "#fdcb6e" },
-            "1990": { name: "1990年代至今", color: "#e84393" }
-        };
-
         // 初始化地图
         $(document).ready(function() {
             const myChart = echarts.init(document.getElementById('mapContainer'));
@@ -502,8 +446,7 @@
             const locationPopup = document.getElementById('locationPopup');
             const landmarkList = document.getElementById('landmarkList');
             const currentCount = document.getElementById('currentCount');
-            
-            let currentEra = "all"; // 当前选中的年代
+            const authorSearch = document.getElementById('authorSearch');
             
             // 显示加载动画
             myChart.showLoading({
@@ -514,18 +457,12 @@
             });
 
             // 初始化地标列表
-            updateLandmarkList(currentEra);
+            updateLandmarkList();
             
-            // 年代筛选按钮事件
-            $('.era-btn').click(function() {
-                const era = $(this).data('era');
-                $('.era-btn').removeClass('active');
-                $(this).addClass('active');
-                
-                currentEra = era;
-                updateMapMarkers(era);
-                updateLandmarkList(era);
-                updateCurrentCount();
+            // 作家搜索功能
+            authorSearch.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
+                filterLandmarksByAuthor(searchTerm);
             });
 
             // 使用本地地图数据
@@ -558,7 +495,17 @@
             // 初始化地图函数
             function initMap() {
                 // 准备地标数据
-                const markers = getMarkersByEra(currentEra);
+                const markers = Object.keys(literaryLandmarks).map(name => {
+                    const landmark = literaryLandmarks[name];
+                    return {
+                        name: name,
+                        value: landmark.position,
+                        works: landmark.works,
+                        symbol: 'pin',
+                        symbolSize: [40, 50],
+                        itemStyle: { color: '#ff6b6b' }
+                    };
+                });
                 
                 const option = {
                     title: {
@@ -575,8 +522,7 @@
                         formatter: params => {
                             if (params.componentType === 'series') {
                                 return `<div style="font-weight:bold">${params.name}</div>
-                                        <div>${params.data.works.length}部相关作品</div>
-                                        <div>${eraData[params.data.era].name}</div>`;
+                                        <div>${params.data.works.length}部相关作品</div>`;
                             }
                             return params.name;
                         }
@@ -604,11 +550,7 @@
                         data: markers,
                         symbol: 'pin',
                         symbolSize: [40, 50],
-                        itemStyle: { 
-                            color: function(params) {
-                                return eraData[params.data.era].color;
-                            }
-                        },
+                        itemStyle: { color: '#ff6b6b' },
                         label: { 
                             show: true, 
                             formatter: '{b}',
@@ -666,68 +608,59 @@
                 });
             }
             
-            // 根据年代筛选地标
-            function getMarkersByEra(era) {
-                return Object.keys(literaryLandmarks)
-                    .filter(name => era === "all" || literaryLandmarks[name].era === era)
-                    .map(name => {
-                        const landmark = literaryLandmarks[name];
-                        // 筛选该地标下符合年代的作品
-                        const filteredWorks = landmark.works.filter(work => 
-                            era === "all" || work.era === era
-                        );
-                        
-                        return {
-                            name: name,
-                            value: landmark.position,
-                            works: filteredWorks,
-                            era: landmark.era,
-                            symbol: 'pin',
-                            symbolSize: [40, 50],
-                            itemStyle: { color: eraData[landmark.era].color }
-                        };
-                    });
-            }
-            
-            // 更新地图标记
-            function updateMapMarkers(era) {
-                const markers = getMarkersByEra(era);
-                
-                myChart.setOption({
-                    series: [{
-                        data: markers
-                    }]
-                });
-            }
-            
             // 更新地标列表
-            function updateLandmarkList(era) {
+            function updateLandmarkList() {
                 let html = '';
                 
-                Object.keys(literaryLandmarks)
-                    .filter(name => era === "all" || literaryLandmarks[name].era === era)
-                    .forEach(name => {
-                        const landmark = literaryLandmarks[name];
-                        const eraName = eraData[landmark.era].name;
-                        
-                        html += `
-                            <div class="timeline-item">
-                                <div class="timeline-year">${name}</div>
-                                <div class="timeline-event">${eraName}</div>
-                                <div class="timeline-event">${landmark.works.length}部相关作品</div>
-                            </div>
-                        `;
-                    });
+                Object.keys(literaryLandmarks).forEach(name => {
+                    const landmark = literaryLandmarks[name];
+                    
+                    html += `
+                        <div class="timeline-item">
+                            <div class="timeline-year">${name}</div>
+                            <div class="timeline-event">${landmark.works.length}部相关作品</div>
+                        </div>
+                    `;
+                });
                 
                 landmarkList.innerHTML = html;
             }
             
+            // 按作者筛选地标
+            function filterLandmarksByAuthor(searchTerm) {
+                if (searchTerm === '') {
+                    updateLandmarkList();
+                    updateCurrentCount();
+                    return;
+                }
+                
+                let html = '';
+                let count = 0;
+                
+                Object.keys(literaryLandmarks).forEach(name => {
+                    const landmark = literaryLandmarks[name];
+                    const filteredWorks = landmark.works.filter(work => 
+                        work.author.toLowerCase().includes(searchTerm)
+                    );
+                    
+                    if (filteredWorks.length > 0) {
+                        count++;
+                        html += `
+                            <div class="timeline-item">
+                                <div class="timeline-year">${name}</div>
+                                <div class="timeline-event">${filteredWorks.length}部相关作品</div>
+                            </div>
+                        `;
+                    }
+                });
+                
+                landmarkList.innerHTML = html;
+                currentCount.textContent = count;
+            }
+            
             // 更新当前地标数量
             function updateCurrentCount() {
-                const count = Object.keys(literaryLandmarks)
-                    .filter(name => currentEra === "all" || literaryLandmarks[name].era === currentEra)
-                    .length;
-                currentCount.textContent = count;
+                currentCount.textContent = Object.keys(literaryLandmarks).length;
             }
             
             // 检查附近地标
@@ -742,9 +675,6 @@
                 // 遍历所有地标
                 Object.keys(literaryLandmarks).forEach(name => {
                     const landmark = literaryLandmarks[name];
-                    // 如果当前筛选了年代，跳过不符合的地标
-                    if (currentEra !== "all" && landmark.era !== currentEra) return;
-                    
                     const pixelCoord = myChart.convertToPixel('geo', landmark.position);
                     
                     // 计算距离
@@ -777,24 +707,15 @@
                 
                 // 构建作品列表
                 let worksHtml = '';
-                // 筛选符合当前年代的作品
-                const filteredWorks = landmark.works.filter(work => 
-                    currentEra === "all" || work.era === currentEra
-                );
-                
-                if (filteredWorks.length === 0) {
-                    worksHtml = '<div class="literary-work-item">该时期暂无相关作品</div>';
-                } else {
-                    filteredWorks.forEach(work => {
-                        worksHtml += `
-                            <div class="literary-work-item">
-                                <div class="literary-work-title">《${work.title}》</div>
-                                <div class="literary-work-author">作者：${work.author}</div>
-                                <div class="literary-work-excerpt">${work.excerpt}</div>
-                            </div>
-                        `;
-                    });
-                }
+                landmark.works.forEach(work => {
+                    worksHtml += `
+                        <div class="literary-work-item">
+                            <div class="literary-work-title">《${work.title}》</div>
+                            <div class="literary-work-author">作者：${work.author}</div>
+                            <div class="literary-work-excerpt">${work.excerpt}</div>
+                        </div>
+                    `;
+                });
                 
                 popupWorks.html(worksHtml);
                 
