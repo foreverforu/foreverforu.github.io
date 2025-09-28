@@ -5853,57 +5853,7 @@ $(document).ready(function() {
         textColor: '#4a5568',
         maskColor: 'rgba(255, 255, 255, 0.9)'
     });
-    // ========== 年代筛选功能 ==========
-    const eraButtons = document.querySelectorAll('.era-btn');
     
-    // 获取所有原始地标数据
-    const allMarkers = buildAllMarkers();
-    
-    // 初始显示全部
-    let currentMarkers = allMarkers;
-    
-    // 更新地图显示
-    function updateMapWithMarkers(markers) {
-        const option = {
-            series: [{
-                data: markers
-            }]
-        };
-        myChart.setOption(option);
-        updateCounter(markers.length);
-    
-        // 显示第一个地标信息（可选）
-        if (markers.length > 0) {
-            showLocationInfo(markers[0]);
-        } else {
-            $('#infoPanel').html('<p class="no-results">该年代暂无相关文学地标</p>');
-        }
-    }
-    
-    // 绑定按钮事件
-    eraButtons.forEach(btn => {
-        btn.addEventListener('click', function () {
-            // 清除所有 active
-            eraButtons.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
-    
-            const era = this.getAttribute('data-era');
-    
-            if (era === 'all') {
-                currentMarkers = allMarkers;
-            } else {
-                // 按作品 era 筛选地标
-                currentMarkers = allMarkers.filter(marker => {
-                    return marker.works.some(work => {
-                        // era 是字符串如 "1920", "1930"
-                        return work.era && work.era.startsWith(era);
-                    });
-                });
-            }
-    
-            updateMapWithMarkers(currentMarkers);
-        });
-    });          
     const buildAllMarkers = () => {
         return Object.keys(nanjingCoords).map(locationName => {
             // 收集所有与该地点相关的作品
