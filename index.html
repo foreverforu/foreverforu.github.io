@@ -469,272 +469,260 @@
 
       // 使用本地地图数据
       // 注意：这里使用模拟的南京地图数据，实际项目中应加载真实的地图数据
-      const nanjingGeoJSON = {
-        "type": "FeatureCollection",
-        "features": [
-          {
-            "type": "Feature",
-            "properties": {
-              "name": "南京市"
-            },
-            "geometry": {
-              "type": "Polygon",
-              "coordinates": [[
-                [118.5, 31.8], [119.1, 31.8],
-                [119.1, 32.2], [118.5, 32.2],
-                [118.5, 31.8]
-              ]]
-            }
-          }
-        ]
-      };
-      echarts.registerMap('nanjing', nanjingGeoJSON);
+      fetch('./nanjing.json')
+        .then(response => response.json())
+        .then(nanjingGeoJSON => {
+          echarts.registerMap('nanjing', nanjingGeoJSON);
 
-      // 初始化地图
-      initMap();
+          // 初始化地图
+          initMap();
 
-      // 初始化地图函数
-      function initMap() {
-        // 准备地标数据
-        const markers = Object.keys(literaryLandmarks).map(name => {
-          const landmark = literaryLandmarks[name];
-          return {
-            name: name,
-            value: landmark.position,
-            works: landmark.works,
-            symbol: 'pin',
-            symbolSize: [40, 50],
-            itemStyle: { color: '#ff6b6b' }
-          };
-        });
+          // 初始化地图函数
+          function initMap() {
+            // 准备地标数据
+            const markers = Object.keys(literaryLandmarks).map(name => {
+              const landmark = literaryLandmarks[name];
+              return {
+                name: name,
+                value: landmark.position,
+                works: landmark.works,
+                symbol: 'pin',
+                symbolSize: [40, 50],
+                itemStyle: { color: '#ff6b6b' }
+              };
+            });
 
-        const option = {
-          title: {
-            text: '南京文学地图',
-            subtext: '作家笔下的人文南京',
-            left: 'center',
-            textStyle: {
-              fontSize: 18,
-              fontWeight: 'bold'
-            }
-          },
-          tooltip: {
-            trigger: 'item',
-            formatter: params => {
+            const option = {
+              title: {
+                text: '南京文学地图',
+                subtext: '作家笔下的人文南京',
+                left: 'center',
+                textStyle: {
+                  fontSize: 18,
+                  fontWeight: 'bold'
+                }
+              },
+              tooltip: {
+                trigger: 'item',
+                formatter: params => {
+                  if (params.componentType === 'series') {
+                    return `<div style="font-weight:bold">${params.name}</div>
+                            <div>${params.data.works.length}部相关作品</div>`;
+                  }
+                  return params.name;
+                }
+              },
+              geo: {
+                map: 'nanjing',
+                roam: true,
+                zoom: 9,
+                center: [118.8, 32.05],
+                itemStyle: {
+                  areaColor: '#e8f4ff',
+                  borderColor: '#297acc',
+                  borderWidth: 1
+                },
+                emphasis: {
+                  itemStyle: {
+                    areaColor: '#c6e2ff'
+                  }
+                }
+              },
+              series: [{
+                name: '文学地标',
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: markers,
+                symbol: 'pin',
+                symbolSize: [40, 50],
+                itemStyle: { color: '#ff6b6b' },
+                label: {
+                  show: true,
+                  formatter: '{b}',
+                  position: 'bottom',
+                  fontSize: 12
+                },
+                emphasis: {
+                  label: {
+                    show: true,
+                    fontSize: 14,
+                    fontWeight: 'bold'
+                  }
+                }
+              }]
+            };
+            // 应用配置
+            myChart.setOption(option);
+            myChart.hideLoading();
+            // 更新当前地标数量
+            updateCurrentCount();
+
+            // 鼠标移动事件 - 控制小人行走
+            myChart.on('mousemove', function(params) {
               if (params.componentType === 'series') {
-                return `<div style="font-weight:bold">${params.name}</div>
-                        <div>${params.data.works.length}部相关作品</div>`;
+                character.style.left = params.event.offsetX + 10 + 'px';
+                character.style.top = params.event.offsetY + 10 + 'px';
               }
-              return params.name;
-            }
-          },
-          geo: {
-            map: 'nanjing',
-            roam: true,
-            zoom: 9,
-            center: [118.8, 32.05],
-            itemStyle: {
-              areaColor: '#e8f4ff',
-              borderColor: '#297acc',
-              borderWidth: 1
-            },
-            emphasis: {
-              itemStyle: {
-                areaColor: '#c6e2ff'
+            });
+
+            // 点击事件 - 显示地点信息
+            myChart.on('click', function(params) {
+              if (params.componentType === 'series') {
+                showLocationDetails(params.name);
               }
-            }
-          },
-          series: [{
-            name: '文学地标',
-            type: 'scatter',
-            coordinateSystem: 'geo',
-            data: markers,
-            symbol: 'pin',
-            symbolSize: [40, 50],
-            itemStyle: { color: '#ff6b6b' },
-            label: {
-              show: true,
-              formatter: '{b}',
-              position: 'bottom',
-              fontSize: 12
-            },
-            emphasis: {
-              label: {
-                show: true,
-                fontSize: 14,
-                fontWeight: 'bold'
-              }
-            }
-          }]
-        };
-        // 应用配置
-        myChart.setOption(option);
-        myChart.hideLoading();
-        // 更新当前地标数量
-        updateCurrentCount();
-
-        // 鼠标移动事件 - 控制小人行走
-        myChart.on('mousemove', function(params) {
-          if (params.componentType === 'series') {
-            character.style.left = params.event.offsetX + 10 + 'px';
-            character.style.top = params.event.offsetY + 10 + 'px';
-          }
-        });
-
-        // 点击事件 - 显示地点信息
-        myChart.on('click', function(params) {
-          if (params.componentType === 'series') {
-            showLocationDetails(params.name);
-          }
-        });
-      }
-
-      // ========== 年代筛选功能 ==========
-      const eraButtons = document.querySelectorAll('.era-btn');
-
-      // 获取所有原始地标数据
-      const allMarkers = Object.keys(literaryLandmarks).map(name => {
-        const landmark = literaryLandmarks[name];
-        return {
-          name: name,
-          value: landmark.position,
-          works: landmark.works,
-          symbol: 'pin',
-          symbolSize: [40, 50],
-          itemStyle: { color: '#ff6b6b' }
-        };
-      });
-
-      // 初始显示全部
-      let currentMarkers = allMarkers;
-
-      // 更新地图显示
-      function updateMapWithMarkers(markers) {
-        const option = {
-          series: [{
-            data: markers
-          }]
-        };
-        myChart.setOption(option);
-        updateCounter(markers.length);
-
-        // 显示第一个地标信息（可选）
-        if (markers.length > 0) {
-          showLocationDetails(markers[0].name);
-        } else {
-          $('#infoPanel').html('<p class="no-results">该年代暂无相关文学地标</p>');
-        }
-      }
-
-      // 绑定按钮事件
-      eraButtons.forEach(btn => {
-        btn.addEventListener('click', function () {
-          // 清除所有 active
-          eraButtons.forEach(b => b.classList.remove('active'));
-          this.classList.add('active');
-
-          const era = this.getAttribute('data-era');
-
-          if (era === 'all') {
-            currentMarkers = allMarkers;
-          } else {
-            // 按作品 era 筛选地标
-            currentMarkers = allMarkers.filter(marker => {
-              return marker.works.some(work => {
-                // era 是字符串如 "1920", "1930"
-                return work.era && work.era.startsWith(era);
-              });
             });
           }
 
-          updateMapWithMarkers(currentMarkers);
-        });
-      });
+          // ========== 年代筛选功能 ==========
+          const eraButtons = document.querySelectorAll('.era-btn');
 
-      // ========== 辅助函数 ==========
-      function updateCurrentCount() {
-        currentCount.textContent = Object.keys(literaryLandmarks).length;
-      }
-
-      function updateLandmarkList() {
-        landmarkList.innerHTML = '';
-        Object.keys(literaryLandmarks).forEach(name => {
-          const item = document.createElement('div');
-          item.className = 'landmark-item';
-          item.textContent = name;
-          item.onclick = () => showLocationDetails(name);
-          landmarkList.appendChild(item);
-        });
-      }
-
-      function filterLandmarksByAuthor(searchTerm) {
-        const filteredNames = Object.keys(literaryLandmarks).filter(name => {
-          const landmark = literaryLandmarks[name];
-          return landmark.works.some(work => work.author.toLowerCase().includes(searchTerm));
-        });
-
-        const filteredMarkers = allMarkers.filter(marker => filteredNames.includes(marker.name));
-
-        // 更新地图
-        const option = {
-          series: [{
-            data: filteredMarkers
-          }]
-        };
-        myChart.setOption(option);
-
-        // 更新计数器
-        updateCounter(filteredMarkers.length);
-
-        // 更新地标列表
-        updateFilteredLandmarkList(filteredNames);
-      }
-
-      function updateFilteredLandmarkList(names) {
-        landmarkList.innerHTML = '';
-        names.forEach(name => {
-          const item = document.createElement('div');
-          item.className = 'landmark-item';
-          item.textContent = name;
-          item.onclick = () => showLocationDetails(name);
-          landmarkList.appendChild(item);
-        });
-      }
-
-      function updateCounter(count) {
-        currentCount.textContent = count;
-      }
-
-      function showLocationDetails(locationName) {
-        const location = literaryLandmarks[locationName];
-        if (!location) return;
-
-        let worksHtml = '';
-        if (location.works && location.works.length > 0) {
-          worksHtml = '<div class="literary-works"><h4>相关作品:</h4><ul>';
-          location.works.forEach(work => {
-            worksHtml += `
-              <li class="work-item">
-                <div class="work-header">
-                  <span class="work-title">《${work.title}》</span>
-                </div>
-                <div class="work-author">作者：${work.author}</div>
-                <div class="work-excerpt">${work.excerpt}</div>
-                <div class="work-era">年代：${work.era}年代</div>
-              </li>
-            `;
+          // 获取所有原始地标数据
+          const allMarkers = Object.keys(literaryLandmarks).map(name => {
+            const landmark = literaryLandmarks[name];
+            return {
+              name: name,
+              value: landmark.position,
+              works: landmark.works,
+              symbol: 'pin',
+              symbolSize: [40, 50],
+              itemStyle: { color: '#ff6b6b' }
+            };
           });
-          worksHtml += '</ul></div>';
-        } else {
-          worksHtml = '<p class="no-works">暂无相关作品信息</p>';
-        }
 
-        $('#infoPanel').html(`
-          <h3>${locationName}</h3>
-          ${worksHtml}
-        `);
-      }
+          // 初始显示全部
+          let currentMarkers = allMarkers;
 
+          // 更新地图显示
+          function updateMapWithMarkers(markers) {
+            const option = {
+              series: [{
+                data: markers
+              }]
+            };
+            myChart.setOption(option);
+            updateCounter(markers.length);
+
+            // 显示第一个地标信息（可选）
+            if (markers.length > 0) {
+              showLocationDetails(markers[0].name);
+            } else {
+              $('#infoPanel').html('<p class="no-results">该年代暂无相关文学地标</p>');
+            }
+          }
+
+          // 绑定按钮事件
+          eraButtons.forEach(btn => {
+            btn.addEventListener('click', function () {
+              // 清除所有 active
+              eraButtons.forEach(b => b.classList.remove('active'));
+              this.classList.add('active');
+
+              const era = this.getAttribute('data-era');
+
+              if (era === 'all') {
+                currentMarkers = allMarkers;
+              } else {
+                // 按作品 era 筛选地标
+                currentMarkers = allMarkers.filter(marker => {
+                  return marker.works.some(work => {
+                    // era 是字符串如 "1920", "1930"
+                    return work.era && work.era.startsWith(era);
+                  });
+                });
+              }
+
+              updateMapWithMarkers(currentMarkers);
+            });
+          });
+
+          // ========== 辅助函数 ==========
+          function updateCurrentCount() {
+            currentCount.textContent = Object.keys(literaryLandmarks).length;
+          }
+
+          function updateLandmarkList() {
+            landmarkList.innerHTML = '';
+            Object.keys(literaryLandmarks).forEach(name => {
+              const item = document.createElement('div');
+              item.className = 'landmark-item';
+              item.textContent = name;
+              item.onclick = () => showLocationDetails(name);
+              landmarkList.appendChild(item);
+            });
+          }
+
+          function filterLandmarksByAuthor(searchTerm) {
+            const filteredNames = Object.keys(literaryLandmarks).filter(name => {
+              const landmark = literaryLandmarks[name];
+              return landmark.works.some(work => work.author.toLowerCase().includes(searchTerm));
+            });
+
+            const filteredMarkers = allMarkers.filter(marker => filteredNames.includes(marker.name));
+
+            // 更新地图
+            const option = {
+              series: [{
+                data: filteredMarkers
+              }]
+            };
+            myChart.setOption(option);
+
+            // 更新计数器
+            updateCounter(filteredMarkers.length);
+
+            // 更新地标列表
+            updateFilteredLandmarkList(filteredNames);
+          }
+
+          function updateFilteredLandmarkList(names) {
+            landmarkList.innerHTML = '';
+            names.forEach(name => {
+              const item = document.createElement('div');
+              item.className = 'landmark-item';
+              item.textContent = name;
+              item.onclick = () => showLocationDetails(name);
+              landmarkList.appendChild(item);
+            });
+          }
+
+          function updateCounter(count) {
+            currentCount.textContent = count;
+          }
+
+          function showLocationDetails(locationName) {
+            const location = literaryLandmarks[locationName];
+            if (!location) return;
+
+            let worksHtml = '';
+            if (location.works && location.works.length > 0) {
+              worksHtml = '<div class="literary-works"><h4>相关作品:</h4><ul>';
+              location.works.forEach(work => {
+                worksHtml += `
+                  <li class="work-item">
+                    <div class="work-header">
+                      <span class="work-title">《${work.title}》</span>
+                    </div>
+                    <div class="work-author">作者：${work.author}</div>
+                    <div class="work-excerpt">${work.excerpt}</div>
+                    <div class="work-era">年代：${work.era}年代</div>
+                  </li>
+                `;
+              });
+              worksHtml += '</ul></div>';
+            } else {
+              worksHtml = '<p class="no-works">暂无相关作品信息</p>';
+            }
+
+            $('#infoPanel').html(`
+              <h3>${locationName}</h3>
+              ${worksHtml}
+            `);
+          }
+        })
+        .catch(error => {
+          console.error('加载 nanjing.json 失败:', error);
+          myChart.hideLoading();
+        });
     });
   </script>
 </body>
