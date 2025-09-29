@@ -266,6 +266,115 @@
       color: var(--light-text);
       font-style: italic;
     }
+    /* ========== 新增：右侧面板样式 ========== */
+    .right-panel {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100vh;
+      background: var(--side-panel-bg);
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      overflow-y: auto;
+      transition: transform 0.3s ease;
+      transform: translateX(100%);
+      padding: 20px;
+    }
+
+    .right-panel.active {
+      transform: translateX(0);
+    }
+
+    .panel-header {
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.5rem;
+      color: var(--primary-color);
+      margin: 0 0 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--accent-color);
+    }
+
+    .book-item {
+      display: flex;
+      margin-bottom: 15px;
+      padding: 10px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .book-cover {
+      flex: 0 0 60px;
+      height: 80px;
+      background: var(--secondary-color);
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: bold;
+      font-size: 0.8rem;
+      text-align: center;
+      padding: 0.5rem;
+      line-height: 1.3;
+    }
+
+    .book-info {
+      flex: 1;
+      padding-left: 12px;
+    }
+
+    .book-title {
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+
+    .book-author {
+      font-size: 0.85rem;
+      color: var(--light-text);
+      margin-bottom: 0.5rem;
+    }
+
+    .book-desc {
+      font-size: 0.85rem;
+      line-height: 1.5;
+    }
+
+    /* 面板切换按钮 */
+    .panel-toggle {
+      position: fixed;
+      bottom: 80px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: var(--secondary-color);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 101;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease;
+    }
+
+    .panel-toggle:hover {
+      transform: scale(1.1);
+      background: var(--primary-color);
+    }
+
+    /* 小屏适配 */
+    @media (max-width: 768px) {
+      .right-panel {
+        width: 85%;
+      }
+      .panel-toggle {
+        right: 10px;
+        bottom: 70px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -338,6 +447,19 @@
         <h4 id="popupLocationName">地点名称</h4>
         <div id="popupWorksList"></div>
       </div>
+    </div>
+
+    <!-- ========== 新增：右侧面板 ========== -->
+    <div class="right-panel" id="rightPanel">
+      <div class="panel-header">南京文学经典作品</div>
+      <div id="bookList">
+        <!-- 动态生成的书籍列表 -->
+      </div>
+    </div>
+
+    <!-- ========== 新增：面板切换按钮 ========== -->
+    <div class="panel-toggle" id="panelToggle">
+      <i class="bi bi-book"></i>
     </div>
   </div>
 
@@ -441,6 +563,45 @@
       }
     };
 
+    // 经典书籍数据
+    const classicBooks = [
+      {
+        title: "桨声灯影里的秦淮河",
+        author: "朱自清",
+        description: "现代散文经典，描绘了秦淮河的夜景与文化韵味，是南京文学的标志性作品。"
+      },
+      {
+        title: "金粉世家",
+        author: "张恨水",
+        description: "民国四大言情小说之一，以南京为背景，展现了民国时期大家族的兴衰。"
+      },
+      {
+        title: "南京人",
+        author: "叶兆言",
+        description: "通过普通市民的生活，展现南京的城市性格与文化特质。"
+      },
+      {
+        title: "南京传",
+        author: "叶兆言",
+        description: "一部关于南京城市历史的文学传记，融合了历史与文学的笔触。"
+      },
+      {
+        title: "小巷深处",
+        author: "陆文夫",
+        description: "描写南京小市民生活，展现了新中国成立初期的社会风貌。"
+      },
+      {
+        title: "钟山风雨",
+        author: "周而复",
+        description: "长篇小说，以南京解放为背景，描绘了波澜壮阔的历史画卷。"
+      },
+      {
+        title: "城北地带",
+        author: "苏童",
+        description: "描写南京城市边缘人物的命运，展现了城市变迁中的个体挣扎。"
+      }
+    ];
+
     // 初始化地图
     $(document).ready(function() {
       const myChart = echarts.init(document.getElementById('mapContainer'));
@@ -449,6 +610,9 @@
       const landmarkList = document.getElementById('landmarkList');
       const currentCount = document.getElementById('currentCount');
       const authorSearch = document.getElementById('authorSearch');
+      const rightPanel = document.getElementById('rightPanel');
+      const panelToggle = document.getElementById('panelToggle');
+      const bookList = document.getElementById('bookList');
 
       // 显示加载动画
       myChart.showLoading({
@@ -461,6 +625,16 @@
       // 初始化地标列表
       updateLandmarkList();
 
+      // 初始化书籍列表
+      updateBookList();
+
+      // 显示右侧面板
+      panelToggle.addEventListener('click', function() {
+        rightPanel.classList.toggle('active');
+        this.innerHTML = rightPanel.classList.contains('active') ? 
+          '<i class="bi bi-x"></i>' : '<i class="bi bi-book"></i>';
+      });
+
       // 作家搜索功能
       authorSearch.addEventListener('input', function() {
         const searchTerm = this.value.toLowerCase();
@@ -468,7 +642,6 @@
       });
 
       // 使用本地地图数据
-      // 注意：这里使用模拟的南京地图数据，实际项目中应加载真实的地图数据
       fetch('./nanjing.json')
         .then(response => response.json())
         .then(nanjingGeoJSON => {
@@ -648,6 +821,23 @@
               item.textContent = name;
               item.onclick = () => showLocationDetails(name);
               landmarkList.appendChild(item);
+            });
+          }
+
+          function updateBookList() {
+            bookList.innerHTML = '';
+            classicBooks.forEach(book => {
+              const item = document.createElement('div');
+              item.className = 'book-item';
+              item.innerHTML = `
+                <div class="book-cover">${book.title.charAt(0)}</div>
+                <div class="book-info">
+                  <div class="book-title">${book.title}</div>
+                  <div class="book-author">作者：${book.author}</div>
+                  <div class="book-desc">${book.description}</div>
+                </div>
+              `;
+              bookList.appendChild(item);
             });
           }
 
